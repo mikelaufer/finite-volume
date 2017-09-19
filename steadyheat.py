@@ -1,4 +1,4 @@
-# TEST 2
+# TEST 3
 # Solves steady state diffusion equation with finite volume method
 # (Versteeg & Malaskera). Example 4.1.
 
@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Parameters
 nx = 10      # Node points
-L = 0.5      # Length of object [m]
+L = 0.5      # Length of object [Cm]
 k = 1000     # Conductivity  [W/mK]
 A = 10**-2   # Cross sectional area
 T_A = 100.0  # Left Boundary Temperature [c]
