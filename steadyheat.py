@@ -1,4 +1,4 @@
-# TEST
+# TEST 2
 # Solves steady state diffusion equation with finite volume method
 # (Versteeg & Malaskera). Example 4.1.
 
