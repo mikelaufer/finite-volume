@@ -7,18 +7,22 @@ import matplotlib.pyplot as plt
 
 temp_array = []
 # Parameters
-nx = 30        # Num  of cells
-time = 300    # final solution time
-dt = 0.5       # [s]
-L = 0.05       # Length of object [m]
-k = 400        # Conductivity  [W/mK]
-rho = 8940.0   # Density
-C = 376.8      # Cp
-T_0 = 23.0     # Starting Temperature [c]
-Q_L = 15.0   # Unit Power
-A = 0.01**2    # Cross sectional area
-h = 15.0/(90-23)
-T_amb = 23.0
+nx = 30           # Num  of cells
+time = 300        # final solution time
+dt = 0.5          # [s]
+L = 0.05          # Length of object [m]
+rho = 8940.0      # Density
+C = 376.8         # Cp
+T_0 = 23.0        # Starting Temperature [c]
+Q_L = 15.0        # Unit Power
+h = 15.0/(90-23)  # Actually h*A_fin 
+T_amb = 23.0      # Ambient Temperature
+
+A = 0.01**2       # Cross sectional area of cell
+k = 400           # Conductivity at of cell [W/mK]
+
+
+
 
 # Dependant parameters
 dx = (L/nx)   # Constant nodal spacing
@@ -32,8 +36,7 @@ B = np.zeros((nx, 1), dtype=float)
 T = T_0*np.ones(nx)
 
 for n in range(nt):
-    Tn = T.copy()
-
+    
     # Interior Nodes
     a_W = k/dx
     a_E = k/dx
@@ -46,7 +49,7 @@ for n in range(nt):
         M[i, i-1] = - a_W
         M[i, i] = a_P
         M[i, i+1] = - a_E
-        B[i] = a_P0*Tn[i]
+        B[i] = a_P0*T[i]
 
     # Left Node
     a_W = 0
@@ -57,7 +60,7 @@ for n in range(nt):
     a_P = a_W + a_E + a_P0 - S_P
     M[0, 0] = a_P
     M[0, 1] = -a_E
-    B[0] = a_P0 * Tn[0] + S_u
+    B[0] = a_P0 * T[0] + S_u
 
     # Right Node
     a_W = k/dx
@@ -68,7 +71,7 @@ for n in range(nt):
     a_P = a_W + a_E + a_P0 - S_P
     M[-1, -1] = a_P
     M[-1, -2] = -a_W
-    B[-1] = a_P0 * Tn[-1] + S_u
+    B[-1] = a_P0 * T[-1] + S_u
 
     T = np.linalg.solve(M, B)
 
