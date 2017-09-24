@@ -40,7 +40,7 @@ S_P = -2*A*k/dx
 S_u = (2*A*k/dx)*T_A
 a_P = a_W + a_E - S_P
 
-M[0, 0] = a_P
+M[0, 0] = a_W + a_E - S_P
 M[0, 1] = - a_E
 B[0] = S_u
 
