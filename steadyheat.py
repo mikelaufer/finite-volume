@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Parameters
 nx = 10      # Node points
-L = 0.5      # Length of object [Cm]
+L = 0.6      # Length of object [Cm]
 k = 1000     # Conductivity  [W/mK]
 A = 10**-2   # Cross sectional area
 T_A = 100.0  # Left Boundary Temperature [c]

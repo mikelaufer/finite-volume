@@ -7,38 +7,27 @@ import matplotlib.pyplot as plt
 
 temp_array = []
 # Parameters
-nx = 120        # Num  of cells
-time = 200        # final solution time
+nx = 10       # Num  of cells
+time = 3000        # final solution time
 dt = 0.2          # [s]
 rho = 8940.0      # Density
 C = 376.8         # Cp
-T_0 = 23.0        # Starting Temperature [c]
-Q_L = 15.0        # Unit Power
-h = Q_L/(90-23)  # Actually h*A_fin
-T_amb = 23.0      # Ambient Temperature
+T_0 = 0.0# Starting Temperature [c]
+T_A = 100.0
+T_B = 500.0
+L = 0.6
 
-contact_dist = 0.005
-hp_dist = 0.05
-base_dist = 0.005
 
 # Dependant parameters
-L = contact_dist + hp_dist + base_dist
 dx = (L/nx)   # Constant nodal spacing
 nt = int(time/dt)
 
 
 # Cross sectional area of cell
-A1 = (0.01**2)*np.ones((int(contact_dist/dx),2))
-A2 = (0.005**2)*np.ones((int(hp_dist/dx),2))
-A2[0,0] = A1[-1,1]
-A3 = (0.01**2)*np.ones((int(base_dist/dx),2))
-A3[0,0] = A2[-1,1]
-A = np.concatenate((A1, A2, A3), axis=0)
+A = (10**-5)*np.ones((nx,2))
 
+k = 1000.0*np.ones(nx)  # Conductivity array[W/mK]
 
-
-k = 400.0*np.ones(nx)  # Conductivity array[W/mK]
-k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = 12000.0
 
 # Grid generation for FV
 x_arr = np.linspace(dx/2, L-dx/2, nx)
@@ -61,15 +50,15 @@ for i in range(nx):
         a_W[i] = 0
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
         a_P0[i] = np.mean(A[i])*rho*C*dx/dt
-        S_u[i] = Q_L
-        S_P[i] = 0
+        S_u[i] = (2*((k[i]+k[i+1])/2)*A[i,1]/dx)*T_A
+        S_P[i] = -2*((k[i]+k[i+1])/2)*A[i,1]/dx
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
     elif i == (nx-1):
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = 0
         a_P0[i] = np.mean(A[i])*rho*C*dx/dt
-        S_u[i] = h*T_amb
-        S_P[i] = -h
+        S_u[i] = (2*((k[i]+k[i-1])/2)*A[i,1]/dx)*T_B
+        S_P[i] = -2*((k[i]+k[i-1])/2)*A[i,1]/dx
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
     else:
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx

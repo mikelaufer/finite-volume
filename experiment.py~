@@ -7,19 +7,19 @@ import matplotlib.pyplot as plt
 
 temp_array = []
 # Parameters
-nx = 120        # Num  of cells
-time = 200        # final solution time
+nx = 18         # Num  of cells
+time = 3000        # final solution time
 dt = 0.2          # [s]
 rho = 8940.0      # Density
 C = 376.8         # Cp
 T_0 = 23.0        # Starting Temperature [c]
 Q_L = 15.0        # Unit Power
-h = Q_L/(90-23)  # Actually h*A_fin
+h = Q_L/(90-23)  # Actually h*A_fin 
 T_amb = 23.0      # Ambient Temperature
 
-contact_dist = 0.005
-hp_dist = 0.05
-base_dist = 0.005
+contact_dist = 0.06
+hp_dist = 0.06
+base_dist = 0.06
 
 # Dependant parameters
 L = contact_dist + hp_dist + base_dist
@@ -30,15 +30,11 @@ nt = int(time/dt)
 # Cross sectional area of cell
 A1 = (0.01**2)*np.ones((int(contact_dist/dx),2))
 A2 = (0.005**2)*np.ones((int(hp_dist/dx),2))
-A2[0,0] = A1[-1,1]
 A3 = (0.01**2)*np.ones((int(base_dist/dx),2))
-A3[0,0] = A2[-1,1]
-A = np.concatenate((A1, A2, A3), axis=0)
-
-
+A = np.concatenate((A1, A2, A3), axis=0)                       
 
 k = 400.0*np.ones(nx)  # Conductivity array[W/mK]
-k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = 12000.0
+k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = 400.0
 
 # Grid generation for FV
 x_arr = np.linspace(dx/2, L-dx/2, nx)
