@@ -1,4 +1,4 @@
-# Explicit unsteady state diffusion equation with finite volume method
+# Implicit unsteady state diffusion equation with finite volume method
 # (Versteeg & Malaskera). Example 8.1.
 # Initial temp = 200c. Left side is insulated.
 # @ t=0 right side is set at 0c.
