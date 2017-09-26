@@ -1,4 +1,5 @@
-# Explicit unsteady state diffusion equation with finite volume method
+# Implicit unsteady heat equation with finite volume method.
+# Allows for changing local material properties and areas.
 # (Versteeg & Malaskera)
 # Left side: unit power. Right side: Convection
 

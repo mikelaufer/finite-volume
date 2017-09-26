@@ -1,7 +1,4 @@
-# Explicit unsteady state diffusion equation with finite volume method
-# (Versteeg & Malaskera)
-# Left side: unit power. Right side: Convection
-
+# LCM method for heat transfer with convection.
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -22,6 +19,7 @@ C = 376.8             # Cp
 
 Cmass = rho*C*L*A     # Can be defined seperately
 Cconv = hA_fin        # Can be defined seperately
+
 
 def LCMtimestep(T, Q_L):
     T = T_amb + Q_L*(2*dt/(2*Cmass + dt*Cconv)) + (T-T_amb)*(2*Cmass -dt*Cconv)/(2*Cmass + dt*Cconv)
