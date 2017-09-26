@@ -1,6 +1,7 @@
-# Explicit unsteady state diffusion equation with finite volume method
+# Implicit 1D unsteady state heat equation with finite volume method.
+# Allows for varying material properties/areas.
 # (Versteeg & Malaskera)
-# Left side: unit power. Right side: Convection
+# Left side: unit power. Right side: Convection.
 
 import numpy as np
 import matplotlib.pyplot as plt
