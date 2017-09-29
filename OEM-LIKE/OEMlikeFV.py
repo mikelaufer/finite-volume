@@ -13,42 +13,65 @@ sns.set_style("whitegrid")
 # Parameters
 nx = 250              # Num  of cells
 dt = 0.2              # [s]
-rho = 8940.0          # Density
-C = 376.8             # Cp
 T_0 = 23.0            # Starting Temperature [c]
 T_amb = 23.0          # Ambient Temperature
-Q_L = 15.0            # Just for hA_fin definition
+Q_L = 15.0            # SS power, just for hA_fin definition
 
-# fin geometry
-nfin = 8
-h_fin = 100.0
-t_fin = 0.0015
-fin_width = 0.01
-P_fin = nfin*(2*fin_width) # total fin perimeter
-
-
+# Geometry
 contact_dist = 0.005  # Contactor distance [m]
 hp_dist = 0.03        # Heatpipe distance [m]
 base_dist = 0.005     # Fin base dist [m]
 fin_height = 0.01
 
-# Dependant parameters
 L = contact_dist + hp_dist + base_dist + fin_height
 dx = (L/nx)  
 
+# Fin geometry and parameters
+nfin = 8
+h_fin = 100.0
+t_fin = 0.0015
+fin_width = 0.01
+P_fin = nfin*(2*fin_width)  # total fin perimeter
+
 # Cross sectional area of cell
-A1 = (0.01**2)*np.ones((int(contact_dist/dx),2))
-A2 = (0.005**2)*np.ones((int(hp_dist/dx),2))
+A_contact = 0.01**2
+A_hp = 0.005**2
+A_base = 0.01**2
+A_fin = nfin*(t_fin*fin_width)
+
+A1 = A_contact*np.ones((int(contact_dist/dx),2))
+A2 = A_hp*np.ones((int(hp_dist/dx),2))
 A2[0,0] = A1[-1,1]
-A3 = (0.01**2)*np.ones((int(base_dist/dx),2))
+A3 = A_base*np.ones((int(base_dist/dx),2))
 A3[0,0] = A2[-1,1]
-A4 = nfin*(t_fin*fin_width)*np.ones((int(fin_height/dx),2))
+A4 = A_fin*np.ones((int(fin_height/dx),2))
 A4[0,0] = A3[-1,1]
 A = np.concatenate((A1, A2, A3, A4), axis=0)
 
+# Material Properties
+k_nom = 400.0
+k_hp = 15000.0
+C_nom = 376.8
+C_hp = 376.8
+rho_nom = 8940.0
+rho_hp = 8940.0
+
+k = k_nom*np.ones(nx)
+k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = k_hp
+C = C_nom**np.ones(nx)
+C[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = C_hp
+rho = rho_nom*np.ones(nx)
+k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = rho_hp
+
 # Conductivity array
-k = 400.0*np.ones(nx)
-k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)+1] = 15000.0
+k = k_nom*np.ones(nx)
+k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = k_hp
+
+C = C_nom**np.ones(nx)
+C[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = C_hp
+
+rho = rho_nom*np.ones(nx)
+k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = rho_hp
 
 # Grid generation for FV
 x_arr = np.linspace(dx/2, L-dx/2, nx)
@@ -68,14 +91,14 @@ for i in range(nx):
     if i == 0:
         a_W[i] = 0
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
-        a_P0[i] = np.mean(A[i])*rho*C*dx/dt
+        a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
         #S_u[i] = Q_L
         S_P[i] = 0
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
     elif i < int((contact_dist + hp_dist)/dx):
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
-        a_P0[i] = np.mean(A[i])*rho*C*dx/dt
+        a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
         #S_u[i] = Q_L
         S_P[i] = 0
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
@@ -83,14 +106,14 @@ for i in range(nx):
     elif i < nx-1:
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
-        a_P0[i] = np.mean(A[i])*rho*C*dx/dt
+        a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
         S_u[i] = h_fin*P_fin*dx*T_amb
         S_P[i] = -h_fin*P_fin*dx
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
     else:
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = 0
-        a_P0[i] = np.mean(A[i])*rho*C*dx/dt
+        a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
         S_u[i] = h_fin*P_fin*dx*T_amb
         S_P[i] = -h_fin*P_fin*dx
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
