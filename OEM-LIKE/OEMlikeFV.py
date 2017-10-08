@@ -63,16 +63,6 @@ C[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = C_hp
 rho = rho_nom*np.ones(nx)
 k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = rho_hp
 
-# Conductivity array
-k = k_nom*np.ones(nx)
-k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = k_hp
-
-C = C_nom**np.ones(nx)
-C[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = C_hp
-
-rho = rho_nom*np.ones(nx)
-k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = rho_hp
-
 # Grid generation for FV
 x_arr = np.linspace(dx/2, L-dx/2, nx)
 
@@ -124,19 +114,7 @@ for i in range(nx):
         S_P[i] = -h_fin*P_fin*dx
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
 
-def SolveBanded(A, D):
-  # Find the diagonals
-  ud = np.insert(np.diag(A,1), 0, 0) # upper diagonal
-  d = np.diag(A) # main diagonal
-  ld = np.insert(np.diag(A,-1), len(d)-1, 0) # lower diagonal
-  # simplified matrix
-  ab = np.matrix([
-    ud,
-    d,
-    ld,
-  ])
-  return solve_banded((1, 1), ab, D )
-
+        
 def initT():
     T = T_0*np.ones(nx, dtype=float)
     return T
@@ -185,7 +163,7 @@ if __name__ == "__main__":
     Q_L = 15*np.ones(nt+1)
     for n in range(nt):
         #Q_L = 15.0
-        T = FVtimestep(T, Q_L[nt])
+        T = FVtimestep(T, Q_L[n])
         temp_array.append(T[0])
         
     # Plot Temperature over time and x
