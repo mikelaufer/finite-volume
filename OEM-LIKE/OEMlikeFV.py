@@ -157,9 +157,9 @@ if __name__ == "__main__":
     temp_array = []
     
     T = initT()
-    # Q_L1 = np.linspace(0,15,50)+2*np.random.random(50)
-    # Q_L2 = 15.0+2*np.random.random(nt-49)-2*np.random.random(nt-49)
-    # Q_L = np.concatenate((Q_L1, Q_L2))
+    #Q_L1 = 20.0+2*np.random.random(200)-2*np.random.random(200)
+    #Q_L2 = 15.0+2*np.random.random(nt-200+1)-2*np.random.random(nt-200+1)
+    #Q_L = np.concatenate((Q_L1, Q_L2))
     Q_L = 15*np.ones(nt+1)
     for n in range(nt):
         #Q_L = 15.0
