@@ -13,7 +13,7 @@ sns.set_style("whitegrid")
 # Parameters
 nx = 250              # Num  of cells
 dt = 0.2              # [s]
-T_0 = 23.0            # Starting Temperature [c]
+T_0 = 30.0            # Starting Temperature [c]
 T_amb = 23.0          # Ambient Temperature
 Q_L = 15.0            # SS power, just for hA_fin definition
 
@@ -152,7 +152,7 @@ def FVtimestep(T, Q_L):
 
 if __name__ == "__main__":
     #Q_L = 15.0          # Unit power
-    time = 200           # Final solution time
+    time = 300           # Final solution time
     nt = int(time/dt)
     temp_array = []
     
@@ -160,6 +160,14 @@ if __name__ == "__main__":
     #Q_L1 = 20.0+2*np.random.random(200)-2*np.random.random(200)
     #Q_L2 = 15.0+2*np.random.random(nt-200+1)-2*np.random.random(nt-200+1)
     #Q_L = np.concatenate((Q_L1, Q_L2))
+
+    # time1 = int(30/dt)
+    # time2 = int(100/dt)
+    # Q_L1 = 20.0+2*np.random.random(time1)-2*np.random.random(time1)
+    # Q_L2 = 15.0+2*np.random.random(time2)-2*np.random.random(time2)
+    # Q_L3 = 0.00+2*np.random.random(nt - time1 -time2 +1)
+    # Q_L = np.concatenate((Q_L1, Q_L2, Q_L3))
+
     Q_L = 15*np.ones(nt+1)
     for n in range(nt):
         #Q_L = 15.0
