@@ -32,6 +32,7 @@ h_fin = 100.0
 t_fin = 0.0015
 fin_width = 0.01
 P_fin = nfin*(2*fin_width)  # total fin perimeter
+A_fin = nfin*t_fin*fin_width
 
 # Cross sectional area of cell
 A_contact = 0.01**2
@@ -96,7 +97,7 @@ for i in range(nx):
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
         a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
-        S_u[i] = h_fin*(A_base-P_fin)*dx*T_amb
+        S_u[i] = h_fin*(A_base-A_fin)*dx*T_amb
         S_P[i] = -h_fin*P_fin*dx
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]    
     elif i < nx-1:
@@ -151,7 +152,6 @@ def FVtimestep(T, Q_L):
 
 
 if __name__ == "__main__":
-    #Q_L = 15.0          # Unit power
     time = 300           # Final solution time
     nt = int(time/dt)
     temp_array = []
