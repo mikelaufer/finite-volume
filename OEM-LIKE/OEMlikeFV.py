@@ -62,7 +62,7 @@ k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = k_hp
 C = C_nom**np.ones(nx)
 C[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = C_hp
 rho = rho_nom*np.ones(nx)
-k[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = rho_hp
+rho[int(contact_dist/dx):int((contact_dist+hp_dist)/dx)] = rho_hp
 
 # Grid generation for FV
 x_arr = np.linspace(dx/2, L-dx/2, nx)
