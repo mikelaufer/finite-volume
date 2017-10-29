@@ -86,14 +86,14 @@ for i in range(nx):
         #S_u[i] = Q_L
         S_P[i] = 0
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
-    elif i < int((contact_dist + hp_dist)/dx) - 1:
+    elif i < int((contact_dist + hp_dist + base_dist)/dx) - 1:
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
         a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
         #S_u[i] = Q_L
         S_P[i] = 0
         a_P[i] = a_W[i] + a_E[i] + a_P0[i] - S_P[i]
-    elif i == int((contact_dist + hp_dist)/dx) - 1:
+    elif i == int((contact_dist + hp_dist + base_dist)/dx) - 1:
         a_W[i] = ((k[i]+k[i-1])/2)*A[i,0]/dx
         a_E[i] = ((k[i]+k[i+1])/2)*A[i,1]/dx
         a_P0[i] = np.mean(A[i])*rho[i]*C[i]*dx/dt
