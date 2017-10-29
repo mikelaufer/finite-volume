@@ -69,7 +69,7 @@ x_arr = np.linspace(dx/2, L-dx/2, nx)
 
 # Initilize solution vectors
 M = np.zeros((nx, nx), dtype=float)
-B = np.zeros((nx, 1), dtype=float)
+B = np.zeros(nx, dtype=float)
 a_W = np.zeros(nx)
 a_E = np.zeros(nx)
 a_P0 = np.zeros(nx)
